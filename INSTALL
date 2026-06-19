@@ -1,0 +1,61 @@
+ETC: Exact Topological Computing
+=================================
+Installation and Verification Guide
+
+REQUIREMENTS
+------------
+  Python  >= 3.9  (tested on 3.9, 3.10, 3.11, 3.12)
+  sympy   >= 1.12
+  mpmath  >= 1.3.0
+
+  Optional for Lean 4 proof checking:
+    Lean 4 and Mathlib4 -- install from leanprover.github.io
+    Lean is NOT a Python package; cannot be installed via pip.
+
+INSTALLATION
+------------
+  pip install .
+  pip install ".[dev]"     # adds pytest, black, mypy, flake8
+
+  Verify:
+  python -c "import etc; print(etc.__version__)"   # 0.1.0
+
+RUNNING THE TEST SUITE
+----------------------
+  pytest tests/ -v
+  # All 84 tests should pass.
+  # Reference output: tests/expected/expected_output.txt
+
+RUNNING THE BENCHMARK
+---------------------
+  python scripts/benchmark.py
+  # Reproduces Tables 3-6 of the paper (~5-15 seconds)
+
+PACKAGE STRUCTURE
+-----------------
+ETC/
+  etc/
+    __init__.py
+    certified.py
+    core/         real.py, sign.py, complex.py, integer.py, interval.py
+    geometry/     curves.py, polygon.py, surfaces.py
+    topology/     space.py, path.py, homotopy.py, invariants.py, manifold.py
+    analysis/     series.py, calculus.py, ode.py
+    verify/       certificate.py, formal.py, symbolic.py
+    problems/     base.py, registry.py, canonical_problems.py
+  tests/
+    test_core.py
+    test_problems.py
+    expected/expected_output.txt
+  scripts/
+    benchmark.py
+    build_manual.py
+  doc/
+    manual.pdf
+  pyproject.toml  README.md  INSTALL  LICENSE
+
+CONTACT
+-------
+Maitri Aniruddhbhai Savaliya
+maitrisavaliya05@gmail.com
+GSFC University, Vadodara, Gujarat, India

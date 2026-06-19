@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "etc-exact-topology"
+version = "0.1.0"
+description = "ETC: Exact Topological Computing -- exact real arithmetic, constructive topology, and verified computation"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+    {name = "Maitri Aniruddhbhai Savaliya", email = "maitrisavaliya05@gmail.com"}
+]
+keywords = ["exact-arithmetic","computable-reals","computational-topology","formal-verification","cauchy-sequences"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+dependencies = ["sympy>=1.12", "mpmath>=1.3.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "pytest-cov>=4.0", "black>=23.0", "mypy>=1.0", "flake8>=6.0"]
+docs = ["sphinx>=5.0", "sphinx-rtd-theme>=1.2"]
+# Note: Lean 4 must be installed separately from leanprover.github.io
+# It is NOT a Python package and cannot be installed via pip.
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["etc*"]
+
+[tool.setuptools.package-data]
+etc = ["py.typed"]
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311", "py312"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v"
+python_files = ["test_*.py"]
+
+[tool.coverage.run]
+source = ["etc"]
+omit = ["tests/*"]
