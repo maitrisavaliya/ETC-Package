@@ -19,7 +19,6 @@ See INSTALL for full instructions including Lean 4 setup.
 
     pytest tests/ -v
 
-Reference output is in `tests/expected/expected_output.txt`.
 
 ## Running the benchmark
 
