@@ -370,6 +370,8 @@ def certify_identity(
         except Exception:
             pass
 
+    from etc.verify.lean_syntax import sympy_to_lean
+
     evidence = {
         "lhs_str":       str(lhs),
         "rhs_str":       str(rhs),
@@ -377,6 +379,9 @@ def certify_identity(
         "identity_ok":   identity_ok,
         "groebner_used": groebner_used,
         "description":   description,
+        "variables_str": [str(v) for v in (variables or [])],
+        "lhs_lean":      sympy_to_lean(lhs),
+        "rhs_lean":      sympy_to_lean(rhs),
     }
 
     claim = description or f"({lhs}) = ({rhs})"

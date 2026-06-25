@@ -7,27 +7,22 @@ These problems are designed to showcase cases where IEEE 754 double precision
 fails catastrophically or silently, while ETC computes exact answers with
 machine-checkable proof certificates.
 
-Problem instances
------------------
-RumpPolynomial()
-    Rump's polynomial: f(a,b) = 333.75b⁶ + a²(11a²b² - b⁶ - 121b⁴ - 2) + 5.5b⁸ + a/(2b)
-    at a = 77617, b = 33096.
-    Exact answer: -54767/66192 ≈ -0.8274
-    Float64: -1.18 × 10²¹ (error factor 1.43 × 10²¹)
 
-L5WindingNumber()
-    Winding number of a closed circular path around a point.
-    Returns the exact integer winding number 1 with full certification.
 """
 
 from __future__ import annotations
+import math
+import time
 from fractions import Fraction
 from typing import Any
 
-from etc.core.real           import ExactReal
-from etc.certified           import Certified
-from etc.verify.certificate import Certificate
-from etc.problems.base       import Problem
+from etc.core.real             import ExactReal
+from etc.certified             import Certified
+from etc.verify.certificate    import Certificate
+from etc.problems.base         import Problem
+from etc.topology.space        import make_Lp_circle
+from etc.topology.path         import Path, UnitInterval
+from etc.topology.invariants   import winding_number as _winding_number
 
 
 class RumpPolynomial(Problem):
@@ -132,14 +127,26 @@ class RumpPolynomial(Problem):
 
 class L5WindingNumber(Problem):
     """
-    Winding number of the L5 curve — exact topological integer.
+    Winding number of a closed circular path — exact topological integer.
 
-    The L5 curve is a simple closed loop in ℝ².  The winding number of the
-    loop around a point inside it is exactly 1 (an integer).  Yet accumulatedFloating-point errors in arctan2 evaluations can corrupt this discrete output.
+    A circular path traversed `winds` times around the origin has exact
+    winding number `winds`.  Floating-point arctan2 angle accumulation
+    introduces O(n_steps * eps_m) rounding error in the running angle
+    total, so float can only report a *rounded* integer with no way to
+    certify it.  ETC computes the exact integer via angle-lifting
+    (etc.topology.invariants.winding_number) and reports a certificate
+    carrying the precision, the path-closure gap, and the rounding
+    error at which the integer was certified.
 
-    ETC computes the exact integer via angle-lifting with certified closure
-    and rounding error bounds.
+    Parameters
+    ----------
+    winds   : int  – number of times the path winds around the origin (default 1)
+    n_steps : int  – number of angle-sample points used for lifting (default 400)
     """
+
+    def __init__(self, winds: int = 1, n_steps: int = 400) -> None:
+        self.winds   = winds
+        self.n_steps = n_steps
 
     @property
     def name(self) -> str:
@@ -148,36 +155,83 @@ class L5WindingNumber(Problem):
     @property
     def description(self) -> str:
         return (
-            "Winding number of the L5 curve: exact integer 1 "
-            "(certified topological invariant)"
+            f"Winding number of a circle traversed {self.winds}x around the "
+            f"origin, sampled at {self.n_steps} points: exact integer "
+            f"{self.winds} (certified topological invariant)"
         )
+
+    @staticmethod
+    def _circle_path(winds: int) -> Path:
+        """Build a closed circular Path winding `winds` times around the origin."""
+        space = make_Lp_circle(2)
+
+        def gamma(t: UnitInterval):
+            theta = float(t.value.eval(20)) * 2 * math.pi * winds
+            return (
+                ExactReal.from_rational(Fraction(math.cos(theta)).limit_denominator(10 ** 9)),
+                ExactReal.from_rational(Fraction(math.sin(theta)).limit_denominator(10 ** 9)),
+            )
+
+        return Path(gamma, space, name=f"circle_{winds}x")
+
+    @staticmethod
+    def _float_winding(winds: int, n_steps: int) -> float:
+        """
+        Float-only angle-accumulation winding number, for honest comparison.
+        Mirrors the algorithm in etc.topology.invariants.winding_number but
+        performed entirely in float64, with no certification.
+        """
+        def point(t_val: float):
+            theta = t_val * 2 * math.pi * winds
+            return math.cos(theta), math.sin(theta)
+
+        angles = []
+        for k in range(n_steps + 1):
+            x, y = point(k / n_steps)
+            angles.append(math.atan2(y, x))
+
+        total = 0.0
+        for i in range(1, len(angles)):
+            diff = angles[i] - angles[i - 1]
+            while diff > math.pi:
+                diff -= 2 * math.pi
+            while diff <= -math.pi:
+                diff += 2 * math.pi
+            total += diff
+        return total / (2 * math.pi)
 
     def solve(self) -> Certified[int]:
         """
-        Compute the winding number of the L5 curve around the origin.
+        Compute the exact integer winding number via angle-lifting, and
+        attach a certificate carrying timing and rounding-error evidence.
 
-        Returns Certified[int] with value 1.
+        Returns Certified[int] with value == self.winds.
         """
-        # The L5 winding number is a simple closed loop in ℝ² winding once
-        # around the origin.  We certify this by direct computation:
-        # the winding number is 1 (by construction of the test case).
+        path = self._circle_path(self.winds)
 
-        winding_val = 1
+        t0 = time.perf_counter()
+        result = _winding_number(path, n_steps=self.n_steps)
+        elapsed_ms = (time.perf_counter() - t0) * 1000.0
+
+        float_wn = self._float_winding(self.winds, self.n_steps)
 
         cert = Certificate(
-            claim   = "Winding number of L5 curve around origin = 1",
-            method  = "topological_invariant_certified",
-            valid   = True,
+            claim   = f"Winding number of a {self.winds}x circular loop around the origin = {self.winds}",
+            method  = "angle_lifting + rounding (etc.topology.invariants.winding_number)",
+            valid   = result.is_valid() and result.value == self.winds,
             evidence = {
-                "curve_name":      "L5",
-                "base_point":      "(0, 0)",
-                "winding_number":  1,
-                "certified":       True,
-                "method":          "angle-lifting + rounding certification",
+                "winds":           self.winds,
+                "n_steps":         self.n_steps,
+                "winding_number":  result.value,
+                "rounding_error":  result.proof.evidence["rounding_error"],
+                "path_closed_gap": result.proof.evidence["path_closed_gap"],
+                "prec_bits":       result.proof.evidence["prec_bits"],
+                "float_winding_estimate": float_wn,
+                "time_ms":         elapsed_ms,
             },
         )
 
-        return Certified(winding_val, cert)
+        return Certified(result.value, cert)
 
     def verify(self, answer: Any) -> bool:
         """
@@ -189,9 +243,9 @@ class L5WindingNumber(Problem):
 
         Returns
         -------
-        bool  – True iff answer == 1
+        bool  – True iff answer == self.winds
         """
         try:
-            return int(answer) == 1
+            return int(answer) == self.winds
         except (TypeError, ValueError):
             return False

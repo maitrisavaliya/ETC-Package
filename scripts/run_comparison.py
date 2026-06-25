@@ -201,8 +201,8 @@ def problem5():
 # ============================================================================
 
 def problem6():
-    l5          = L5WindingNumber()
-    float_wind  = l5._float_winding(200)
+    l5          = L5WindingNumber(winds=1, n_steps=400)
+    float_wind  = l5._float_winding(winds=1, n_steps=400)
     result      = l5.solve()
 
     return (

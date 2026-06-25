@@ -81,3 +81,34 @@ class TestL5WindingNumber:
         assert L5WindingNumber().verify(1) is True
     def test_verify_wrong_answer(self):
         assert L5WindingNumber().verify(0) is False
+
+    def test_winds_parameter_is_honoured(self):
+        """
+        Regression test: solve() must actually compute the winding number
+        from the constructed path, not return a hardcoded constant.
+        winds=2 and winds=3 must give 2 and 3 respectively.
+        """
+        assert L5WindingNumber(winds=2).solve().value == 2
+        assert L5WindingNumber(winds=3).solve().value == 3
+    def test_verify_respects_winds(self):
+        assert L5WindingNumber(winds=2).verify(2) is True
+        assert L5WindingNumber(winds=2).verify(1) is False
+    def test_certificate_carries_real_evidence(self):
+        """
+        Regression test: the certificate must carry genuine angle-lifting
+        evidence (rounding_error, path_closed_gap, n_steps) rather than
+        the placeholder string evidence the original implementation used.
+        """
+        result = L5WindingNumber(winds=1, n_steps=400).solve()
+        ev = result.proof.evidence
+        for key in ("n_steps", "rounding_error", "path_closed_gap",
+                    "float_winding_estimate", "time_ms"):
+            assert key in ev
+        assert ev["n_steps"] == 400
+    def test_n_steps_parameter_changes_sampling(self):
+        r_coarse = L5WindingNumber(winds=1, n_steps=20).solve()
+        r_fine   = L5WindingNumber(winds=1, n_steps=400).solve()
+        assert r_coarse.value == 1
+        assert r_fine.value == 1
+        assert r_coarse.proof.evidence["n_steps"] == 20
+        assert r_fine.proof.evidence["n_steps"] == 400

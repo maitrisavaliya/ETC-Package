@@ -321,29 +321,79 @@ open Real Set
         """
         Export an IdentityCertificate.
 
-        For ring identities, uses the `ring` tactic.
-        For norm_num-provable identities, uses norm_num.
-        Otherwise inserts sorry.
+        Renders the LHS/RHS through etc.verify.lean_syntax.sympy_to_lean
+        (NOT raw Python str()), and binds every free variable with an
+        explicit `∀ ... : ℝ,` quantifier so the generated theorem is
+        closed and parses in Lean 4. For ring identities (simplified_diff
+        == "0") the `ring` tactic is used; this still must be checked
+        against the real Lean compiler before being trusted, since
+        `ring` cannot close goals involving Real.sin / Real.cos / Real.sqrt
+        (those need Mathlib lemmas such as Real.sin_sq_add_cos_sq instead).
         """
-        lean_name = self._unique_name(name or "identity")
-        lhs       = cert.evidence.get("lhs_str", "lhs")
-        rhs       = cert.evidence.get("rhs_str", "rhs")
-        diff      = cert.evidence.get("simplified_diff", "?")
+        lean_name  = self._unique_name(name or "identity")
+        lhs_str    = cert.evidence.get("lhs_str", "lhs")
+        rhs_str    = cert.evidence.get("rhs_str", "rhs")
+        diff       = cert.evidence.get("simplified_diff", "?")
+        lhs_lean   = cert.evidence.get("lhs_lean")
+        rhs_lean   = cert.evidence.get("rhs_lean")
+        var_names  = cert.evidence.get("variables_str", [])
 
         lines = [
-            _lean_comment(f"Identity Certificate: {lhs} = {rhs}"),
+            _lean_comment(f"Identity Certificate: {lhs_str} = {rhs_str}"),
             _lean_comment(f"Simplified diff:      {diff}"),
             "",
-            f"theorem {lean_name} : {lhs} = {rhs} := by",
         ]
 
-        if diff == "0":
+        if lhs_lean is None or rhs_lean is None:
+            # No Lean-rendered form available (e.g. certificate built by
+            # older code or constructed by hand) -- do not guess from
+            # Python str(); emit an explicit sorry instead of invalid syntax.
+            lines.append(f"theorem {lean_name} : True := by")
+            lines.append(
+                _lean_sorry_proof(
+                    f"no Lean-syntax rendering available for identity "
+                    f"'{lhs_str} = {rhs_str}'; re-run with an up-to-date "
+                    f"certify_identity() call to populate lhs_lean/rhs_lean"
+                )
+            )
+            lines.append("")
+            src = "\n".join(lines)
+            self._add(src)
+            return lean_name
+
+        binder = f"∀ {' '.join(var_names)} : ℝ, " if var_names else ""
+        lines.append(f"theorem {lean_name} : {binder}{lhs_lean} = {rhs_lean} := by")
+
+        # Functions ring cannot discharge: anything routed through
+        # Real.sin / Real.cos / Real.sqrt / Real.exp / Real.log needs a
+        # Mathlib lemma, not `ring`. Detect by substring on the rendered
+        # Lean text rather than guessing from the diff alone.
+        transcendental = any(
+            tok in (lhs_lean + rhs_lean)
+            for tok in ("Real.sin", "Real.cos", "Real.tan", "Real.exp", "Real.log", "Real.sqrt")
+        )
+
+        if diff == "0" and not transcendental:
             lines.append(_lean_ring_proof())
+        elif diff == "0" and transcendental:
+            lines.append(
+                _lean_sorry_proof(
+                    "identity holds (ETC verified via SymPy simplify/trigsimp) "
+                    "but `ring` cannot close transcendental goals -- supply the "
+                    "matching Mathlib lemma, e.g. Real.sin_sq_add_cos_sq for the "
+                    "Pythagorean identity"
+                )
+            )
         elif cert.valid:
-            # Try norm_num first, fall back to ring
-            lines.append(f"  ring_nf  -- or norm_num")
+            lines.append(
+                _lean_sorry_proof(
+                    f"identity verified numerically/symbolically by ETC "
+                    f"(simplified_diff = {diff}) but not yet reduced to a "
+                    f"single closing tactic"
+                )
+            )
         else:
-            lines.append(_lean_sorry_proof(f"prove {lhs} = {rhs}"))
+            lines.append(_lean_sorry_proof(f"prove {lhs_str} = {rhs_str}"))
 
         lines.append("")
         src = "\n".join(lines)
