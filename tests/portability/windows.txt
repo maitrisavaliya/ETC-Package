@@ -1,0 +1,244 @@
+ETC portability results (VS Code / Windows)
+==========================================
+
+Environment
+- OS: Windows
+- Python: 3.14.0
+- pytest: pytest 9.0.3
+Commands run
+1. pytest tests/test_core.py -v
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.0.3, pluggy-1.6.0 -- C:\Users\maitr\AppData\Local\Programs\Python\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\maitr\ETC-Package
+configfile: pyproject.toml
+plugins: cov-7.1.0
+collecting ... collected 63 items
+
+tests/test_core.py::TestRump::test_exact_value PASSED                    [  1%]
+tests/test_core.py::TestRump::test_float_is_wrong PASSED                 [  3%]
+tests/test_core.py::TestLargeSumCancellation::test_exact_result_is_one PASSED [  4%]
+tests/test_core.py::TestLargeSumCancellation::test_float_returns_zero PASSED [  6%]
+tests/test_core.py::TestNearZeroSqrt::test_identity_symbolically PASSED  [  7%]
+tests/test_core.py::TestNearZeroSqrt::test_numerical_improvement_over_float PASSED [  9%]
+tests/test_core.py::TestPolynomialSensitivity::test_exact_value PASSED   [ 11%]
+tests/test_core.py::TestPolynomialSensitivity::test_float_expanded_wrong_sign PASSED [ 12%]
+tests/test_core.py::TestOrientationTest::test_certified_sign_plus_one PASSED [ 14%]
+tests/test_core.py::TestOrientationTest::test_float_says_collinear PASSED [ 15%]
+tests/test_core.py::TestWindingNumber::test_winding_number_1 PASSED      [ 17%]
+tests/test_core.py::TestWindingNumber::test_winding_number_2 PASSED      [ 19%]
+tests/test_core.py::TestWindingNumber::test_certificate_has_rounding_error PASSED [ 20%]
+tests/test_core.py::TestWindingNumber::test_certificate_serialisable PASSED [ 22%]
+tests/test_core.py::TestPythagoreanIdentity::test_symbolic_simplification PASSED [ 23%]
+tests/test_core.py::TestPythagoreanIdentity::test_certify_identity_valid PASSED [ 25%]
+tests/test_core.py::TestPythagoreanIdentity::test_float_sometimes_exactly_one PASSED [ 26%]
+tests/test_core.py::TestArithmetic::test_add_rational PASSED             [ 28%]
+tests/test_core.py::TestArithmetic::test_sub_exact PASSED                [ 30%]
+tests/test_core.py::TestArithmetic::test_mul_exact PASSED                [ 31%]
+tests/test_core.py::TestArithmetic::test_recip PASSED                    [ 33%]
+tests/test_core.py::TestArithmetic::test_pow_int_exact PASSED            [ 34%]
+tests/test_core.py::TestArithmetic::test_pi_precision PASSED             [ 36%]
+tests/test_core.py::TestArithmetic::test_e_precision PASSED              [ 38%]
+tests/test_core.py::TestArithmetic::test_log2_precision PASSED           [ 39%]
+tests/test_core.py::TestArithmetic::test_sqrt2_newton_is_correct PASSED  [ 41%]
+tests/test_core.py::TestArithmetic::test_sqrt2_newton_vs_bisection_same_answer PASSED [ 42%]
+tests/test_core.py::TestArithmetic::test_sqrt2_newton_faster_than_bisection PASSED [ 44%]
+tests/test_core.py::TestArithmetic::test_sin_argument_reduction_large_input PASSED [ 46%]
+tests/test_core.py::TestArithmetic::test_cos_argument_reduction_large_input PASSED [ 47%]
+tests/test_core.py::TestArithmetic::test_exp_log_inverse PASSED          [ 49%]
+tests/test_core.py::TestEvalCaching::test_cache_hit_returns_same_object PASSED [ 50%]
+tests/test_core.py::TestEvalCaching::test_cache_populates_on_first_call PASSED [ 52%]
+tests/test_core.py::TestEvalCaching::test_cache_hit_is_faster PASSED     [ 53%]
+tests/test_core.py::TestEvalCaching::test_different_precisions_cached_independently PASSED [ 55%]
+tests/test_core.py::TestTimedEval::test_returns_fraction_and_float PASSED [ 57%]
+tests/test_core.py::TestTimedEval::test_value_matches_eval PASSED        [ 58%]
+tests/test_core.py::TestTimedEval::test_cache_hit_reports_zero_time PASSED [ 60%]
+tests/test_core.py::TestTimedEval::test_first_call_positive_time PASSED  [ 61%]
+tests/test_core.py::TestTimedEval::test_negative_precision_raises PASSED [ 63%]
+tests/test_core.py::TestTimedEval::test_zero_precision_valid PASSED      [ 65%]
+tests/test_core.py::TestBenchmarkEval::test_correct_length PASSED        [ 66%]
+tests/test_core.py::TestBenchmarkEval::test_returns_int_float_pairs PASSED [ 68%]
+tests/test_core.py::TestBenchmarkEval::test_all_times_positive PASSED    [ 69%]
+tests/test_core.py::TestBenchmarkEval::test_larger_precision_not_faster PASSED [ 71%]
+tests/test_core.py::TestBenchmarkEval::test_excludes_cache PASSED        [ 73%]
+tests/test_core.py::TestSign::test_pi_minus_3_positive PASSED            [ 74%]
+tests/test_core.py::TestSign::test_negative_rational PASSED              [ 76%]
+tests/test_core.py::TestSign::test_positive_rational PASSED              [ 77%]
+tests/test_core.py::TestSign::test_certificate_fields PASSED             [ 79%]
+tests/test_core.py::TestSign::test_sign_returns_certified PASSED         [ 80%]
+tests/test_core.py::TestCertificateSerialization::test_json_round_trip PASSED [ 82%]
+tests/test_core.py::TestCertificateSerialization::test_certificate_store_all_valid PASSED [ 84%]
+tests/test_core.py::TestCertificateSerialization::test_certificate_summary_string PASSED [ 85%]
+tests/test_core.py::TestLean4Export::test_export_non_empty PASSED        [ 87%]
+tests/test_core.py::TestLean4Export::test_mathlib_imports_present PASSED [ 88%]
+tests/test_core.py::TestLean4Export::test_sorry_stubs_annotated PASSED   [ 90%]
+tests/test_core.py::TestLean4Export::test_valid_identity_uses_ring_or_norm_num PASSED [ 92%]
+tests/test_core.py::TestPublicAPI::test_symbol_count_is_40 PASSED        [ 93%]
+tests/test_core.py::TestPublicAPI::test_benchmark_eval_in_all PASSED     [ 95%]
+tests/test_core.py::TestPublicAPI::test_timed_eval_callable PASSED       [ 96%]
+tests/test_core.py::TestPublicAPI::test_all_symbols_importable PASSED    [ 98%]
+tests/test_core.py::TestPublicAPI::test_version_present PASSED           [100%]
+
+============================= 63 passed in 1.19s ==============================
+
+2. pytest tests/test_problems.py -v
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.0.3, pluggy-1.6.0 -- C:\Users\maitr\AppData\Local\Programs\Python\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\maitr\ETC-Package
+configfile: pyproject.toml
+plugins: cov-7.1.0
+collecting ... collected 25 items
+
+tests/test_problems.py::TestProblemBase::test_rump_is_problem_instance PASSED [  4%]
+tests/test_problems.py::TestProblemBase::test_l5_is_problem_instance PASSED [  8%]
+tests/test_problems.py::TestProblemBase::test_problem_has_name PASSED    [ 12%]
+tests/test_problems.py::TestProblemBase::test_problem_has_description PASSED [ 16%]
+tests/test_problems.py::TestProblemBase::test_problem_repr PASSED        [ 20%]
+tests/test_problems.py::TestProblemRegistry::test_register_and_get PASSED [ 24%]
+tests/test_problems.py::TestProblemRegistry::test_get_unknown_returns_none PASSED [ 28%]
+tests/test_problems.py::TestProblemRegistry::test_len PASSED             [ 32%]
+tests/test_problems.py::TestProblemRegistry::test_list_returns_names PASSED [ 36%]
+tests/test_problems.py::TestProblemRegistry::test_global_registry_is_registry_instance PASSED [ 40%]
+tests/test_problems.py::TestRumpPolynomial::test_solve_returns_certified PASSED [ 44%]
+tests/test_problems.py::TestRumpPolynomial::test_solve_exact_value PASSED [ 48%]
+tests/test_problems.py::TestRumpPolynomial::test_solve_certificate_valid PASSED [ 52%]
+tests/test_problems.py::TestRumpPolynomial::test_verify_exact_answer PASSED [ 56%]
+tests/test_problems.py::TestRumpPolynomial::test_verify_wrong_answer PASSED [ 60%]
+tests/test_problems.py::TestRumpPolynomial::test_float_gives_wrong_answer PASSED [ 64%]
+tests/test_problems.py::TestL5WindingNumber::test_solve_returns_certified PASSED [ 68%]
+tests/test_problems.py::TestL5WindingNumber::test_solve_winding_is_one PASSED [ 72%]
+tests/test_problems.py::TestL5WindingNumber::test_solve_certificate_valid PASSED [ 76%]
+tests/test_problems.py::TestL5WindingNumber::test_verify_correct_answer PASSED [ 80%]
+tests/test_problems.py::TestL5WindingNumber::test_verify_wrong_answer PASSED [ 84%]
+tests/test_problems.py::TestL5WindingNumber::test_winds_parameter_is_honoured PASSED [ 88%]
+tests/test_problems.py::TestL5WindingNumber::test_verify_respects_winds PASSED [ 92%]
+tests/test_problems.py::TestL5WindingNumber::test_certificate_carries_real_evidence PASSED [ 96%]
+tests/test_problems.py::TestL5WindingNumber::test_n_steps_parameter_changes_sampling PASSED [100%]
+
+============================= 25 passed in 0.76s ==============================
+
+3. pytest tests -v
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.0.3, pluggy-1.6.0 -- C:\Users\maitr\AppData\Local\Programs\Python\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\maitr\ETC-Package
+configfile: pyproject.toml
+plugins: cov-7.1.0
+collecting ... collected 88 items
+
+tests/test_core.py::TestRump::test_exact_value PASSED                    [  1%]
+tests/test_core.py::TestRump::test_float_is_wrong PASSED                 [  2%]
+tests/test_core.py::TestLargeSumCancellation::test_exact_result_is_one PASSED [  3%]
+tests/test_core.py::TestLargeSumCancellation::test_float_returns_zero PASSED [  4%]
+tests/test_core.py::TestNearZeroSqrt::test_identity_symbolically PASSED  [  5%]
+tests/test_core.py::TestNearZeroSqrt::test_numerical_improvement_over_float PASSED [  6%]
+tests/test_core.py::TestPolynomialSensitivity::test_exact_value PASSED   [  7%]
+tests/test_core.py::TestPolynomialSensitivity::test_float_expanded_wrong_sign PASSED [  9%]
+tests/test_core.py::TestOrientationTest::test_certified_sign_plus_one PASSED [ 10%]
+tests/test_core.py::TestOrientationTest::test_float_says_collinear PASSED [ 11%]
+tests/test_core.py::TestWindingNumber::test_winding_number_1 PASSED      [ 12%]
+tests/test_core.py::TestWindingNumber::test_winding_number_2 PASSED      [ 13%]
+tests/test_core.py::TestWindingNumber::test_certificate_has_rounding_error PASSED [ 14%]
+tests/test_core.py::TestWindingNumber::test_certificate_serialisable PASSED [ 15%]
+tests/test_core.py::TestPythagoreanIdentity::test_symbolic_simplification PASSED [ 17%]
+tests/test_core.py::TestPythagoreanIdentity::test_certify_identity_valid PASSED [ 18%]
+tests/test_core.py::TestPythagoreanIdentity::test_float_sometimes_exactly_one PASSED [ 19%]
+tests/test_core.py::TestArithmetic::test_add_rational PASSED             [ 20%]
+tests/test_core.py::TestArithmetic::test_sub_exact PASSED                [ 21%]
+tests/test_core.py::TestArithmetic::test_mul_exact PASSED                [ 22%]
+tests/test_core.py::TestArithmetic::test_recip PASSED                    [ 23%]
+tests/test_core.py::TestArithmetic::test_pow_int_exact PASSED            [ 25%]
+tests/test_core.py::TestArithmetic::test_pi_precision PASSED             [ 26%]
+tests/test_core.py::TestArithmetic::test_e_precision PASSED              [ 27%]
+tests/test_core.py::TestArithmetic::test_log2_precision PASSED           [ 28%]
+tests/test_core.py::TestArithmetic::test_sqrt2_newton_is_correct PASSED  [ 29%]
+tests/test_core.py::TestArithmetic::test_sqrt2_newton_vs_bisection_same_answer PASSED [ 30%]
+tests/test_core.py::TestArithmetic::test_sqrt2_newton_faster_than_bisection PASSED [ 31%]
+tests/test_core.py::TestArithmetic::test_sin_argument_reduction_large_input PASSED [ 32%]
+tests/test_core.py::TestArithmetic::test_cos_argument_reduction_large_input PASSED [ 34%]
+tests/test_core.py::TestArithmetic::test_exp_log_inverse PASSED          [ 35%]
+tests/test_core.py::TestEvalCaching::test_cache_hit_returns_same_object PASSED [ 36%]
+tests/test_core.py::TestEvalCaching::test_cache_populates_on_first_call PASSED [ 37%]
+tests/test_core.py::TestEvalCaching::test_cache_hit_is_faster PASSED     [ 38%]
+tests/test_core.py::TestEvalCaching::test_different_precisions_cached_independently PASSED [ 39%]
+tests/test_core.py::TestTimedEval::test_returns_fraction_and_float PASSED [ 40%]
+tests/test_core.py::TestTimedEval::test_value_matches_eval PASSED        [ 42%]
+tests/test_core.py::TestTimedEval::test_cache_hit_reports_zero_time PASSED [ 43%]
+tests/test_core.py::TestTimedEval::test_first_call_positive_time PASSED  [ 44%]
+tests/test_core.py::TestTimedEval::test_negative_precision_raises PASSED [ 45%]
+tests/test_core.py::TestTimedEval::test_zero_precision_valid PASSED      [ 46%]
+tests/test_core.py::TestBenchmarkEval::test_correct_length PASSED        [ 47%]
+tests/test_core.py::TestBenchmarkEval::test_returns_int_float_pairs PASSED [ 48%]
+tests/test_core.py::TestBenchmarkEval::test_all_times_positive PASSED    [ 50%]
+tests/test_core.py::TestBenchmarkEval::test_larger_precision_not_faster PASSED [ 51%]
+tests/test_core.py::TestBenchmarkEval::test_excludes_cache PASSED        [ 52%]
+tests/test_core.py::TestSign::test_pi_minus_3_positive PASSED            [ 53%]
+tests/test_core.py::TestSign::test_negative_rational PASSED              [ 54%]
+tests/test_core.py::TestSign::test_positive_rational PASSED              [ 55%]
+tests/test_core.py::TestSign::test_certificate_fields PASSED             [ 56%]
+tests/test_core.py::TestSign::test_sign_returns_certified PASSED         [ 57%]
+tests/test_core.py::TestCertificateSerialization::test_json_round_trip PASSED [ 59%]
+tests/test_core.py::TestCertificateSerialization::test_certificate_store_all_valid PASSED [ 60%]
+tests/test_core.py::TestCertificateSerialization::test_certificate_summary_string PASSED [ 61%]
+tests/test_core.py::TestLean4Export::test_export_non_empty PASSED        [ 62%]
+tests/test_core.py::TestLean4Export::test_mathlib_imports_present PASSED [ 63%]
+tests/test_core.py::TestLean4Export::test_sorry_stubs_annotated PASSED   [ 64%]
+tests/test_core.py::TestLean4Export::test_valid_identity_uses_ring_or_norm_num PASSED [ 65%]
+tests/test_core.py::TestPublicAPI::test_symbol_count_is_40 PASSED        [ 67%]
+tests/test_core.py::TestPublicAPI::test_benchmark_eval_in_all PASSED     [ 68%]
+tests/test_core.py::TestPublicAPI::test_timed_eval_callable PASSED       [ 69%]
+tests/test_core.py::TestPublicAPI::test_all_symbols_importable PASSED    [ 70%]
+tests/test_core.py::TestPublicAPI::test_version_present PASSED           [ 71%]
+tests/test_problems.py::TestProblemBase::test_rump_is_problem_instance PASSED [ 72%]
+tests/test_problems.py::TestProblemBase::test_l5_is_problem_instance PASSED [ 73%]
+tests/test_problems.py::TestProblemBase::test_problem_has_name PASSED    [ 75%]
+tests/test_problems.py::TestProblemBase::test_problem_has_description PASSED [ 76%]
+tests/test_problems.py::TestProblemBase::test_problem_repr PASSED        [ 77%]
+tests/test_problems.py::TestProblemRegistry::test_register_and_get PASSED [ 78%]
+tests/test_problems.py::TestProblemRegistry::test_get_unknown_returns_none PASSED [ 79%]
+tests/test_problems.py::TestProblemRegistry::test_len PASSED             [ 80%]
+tests/test_problems.py::TestProblemRegistry::test_list_returns_names PASSED [ 81%]
+tests/test_problems.py::TestProblemRegistry::test_global_registry_is_registry_instance PASSED [ 82%]
+tests/test_problems.py::TestRumpPolynomial::test_solve_returns_certified PASSED [ 84%]
+tests/test_problems.py::TestRumpPolynomial::test_solve_exact_value PASSED [ 85%]
+tests/test_problems.py::TestRumpPolynomial::test_solve_certificate_valid PASSED [ 86%]
+tests/test_problems.py::TestRumpPolynomial::test_verify_exact_answer PASSED [ 87%]
+tests/test_problems.py::TestRumpPolynomial::test_verify_wrong_answer PASSED [ 88%]
+tests/test_problems.py::TestRumpPolynomial::test_float_gives_wrong_answer PASSED [ 89%]
+tests/test_problems.py::TestL5WindingNumber::test_solve_returns_certified PASSED [ 90%]
+tests/test_problems.py::TestL5WindingNumber::test_solve_winding_is_one PASSED [ 92%]
+tests/test_problems.py::TestL5WindingNumber::test_solve_certificate_valid PASSED [ 93%]
+tests/test_problems.py::TestL5WindingNumber::test_verify_correct_answer PASSED [ 94%]
+tests/test_problems.py::TestL5WindingNumber::test_verify_wrong_answer PASSED [ 95%]
+tests/test_problems.py::TestL5WindingNumber::test_winds_parameter_is_honoured PASSED [ 96%]
+tests/test_problems.py::TestL5WindingNumber::test_verify_respects_winds PASSED [ 97%]
+tests/test_problems.py::TestL5WindingNumber::test_certificate_carries_real_evidence PASSED [ 98%]
+tests/test_problems.py::TestL5WindingNumber::test_n_steps_parameter_changes_sampling PASSED [100%]
+
+============================= 88 passed in 1.37s ==============================
+
+4. python scripts/run_comparison.py
+
+  Float64 vs ETC -- Seven Canonical Floating-Point Failure Cases
+  =============================================================================================================================
+  #   | Problem                                | float64 result               | ETC result                       | Float | ETC
+  -----------------------------------------------------------------------------------------------------------------------------
+  1   | Rump f(77617,33096)                    | -1.180592e+21                | -54767/66192 = -0.82739606       | FAIL  | PASS
+  -----------------------------------------------------------------------------------------------------------------------------
+  2   | 10^16 + 1 - 10^16                      | 0.0  (should be 1)           | 1  (exact integer)               | FAIL  | PASS
+  -----------------------------------------------------------------------------------------------------------------------------
+  3   | (sqrt(x+1)-sqrt(x))*(...)-1            | 0.1780  (should be 0)        | |f| = 1.32e-85; identity proved=True | FAIL  | PASS
+  -----------------------------------------------------------------------------------------------------------------------------
+  4   | (x-1)^10 at x=1+1e-6                   | 4.6629e-15  (should be 1e-60) | 1/10^60 = 1/1000000000000000000000000000000000000000000000000000000000000 | FAIL  | PASS
+  -----------------------------------------------------------------------------------------------------------------------------
+  5   | Orientation eps=1e-16                  | cross=0.0  (collinear, WRONG) | sign=+1  CCW  cert_valid=True    | FAIL  | PASS
+  -----------------------------------------------------------------------------------------------------------------------------
+  6   | Winding number (L5 curve)              | 1.000000  (uncertified)      | 1  (exact int, cert_valid=True)  | FAIL  | PASS
+  -----------------------------------------------------------------------------------------------------------------------------
+  7   | cos^2(x)+sin^2(x)=1                    | max err=2.22e-16  (10^4 samples) | proved for all x in R  (SymPy=True) | FAIL  | PASS
+  -----------------------------------------------------------------------------------------------------------------------------
+
+  Summary: float64 passed 0/7 problems | ETC passed 7/7 problems
+
+
